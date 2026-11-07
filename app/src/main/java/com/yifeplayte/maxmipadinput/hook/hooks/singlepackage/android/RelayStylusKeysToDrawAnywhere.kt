@@ -17,11 +17,18 @@ import com.yifeplayte.maxmipadinput.hook.hooks.BaseHook
  * DrawAnywhere's own accessibility key filter cannot receive key events on
  * HyperOS (key filtering is restricted to privileged apps), so this hook runs
  * in system_server: it asks DrawAnywhere via a ContentProvider whether the
- * overlay canvas is visible; if so, the key event is dropped (intercepting it
- * before dispatch) and forwarded by broadcast to DrawAnywhere's
- * StylusKeyReceiver, which implements hold-for-eraser / tap-to-switch-tool.
- * While the canvas is hidden or in passthrough mode the key is untouched, so
- * page turning in Mi Notes and every other app keeps working.
+ * overlay canvas is visible; if so, the key event is dropped and forwarded by
+ * broadcast to DrawAnywhere's StylusKeyReceiver, which implements
+ * hold-for-eraser / tap-to-switch-tool. While the canvas is hidden or in
+ * passthrough mode the key is untouched, so page turning in Mi Notes and every
+ * other app keeps working.
+ *
+ * Suppression happens in interceptKeyBeforeQueueing by returning 0 (clearing
+ * ACTION_PASS_TO_USER), which makes InputDispatcher discard the event before
+ * it is queued — and before MIUI's stylus page-key handling inside
+ * interceptKeyBeforeDispatching can run. Note: EzXHelper's methodFinder()
+ * also yields inherited interface methods, so abstract members must be
+ * filtered out explicitly.
  */
 object RelayStylusKeysToDrawAnywhere : BaseHook() {
     override val key = "relay_stylus_keys_to_drawanywhere"
@@ -70,15 +77,17 @@ object RelayStylusKeysToDrawAnywhere : BaseHook() {
     override fun hook() {
         val pwm = loadClass("com.android.server.policy.PhoneWindowManager")
         val methods = pwm.methodFinder().filter {
-            name == "interceptKeyBeforeDispatching" && parameterTypes.size == 3
+            name == "interceptKeyBeforeQueueing" &&
+                parameterTypes.size == 2 &&
+                java.lang.reflect.Modifier.isAbstract(modifiers).not()
         }.toList()
         if (methods.isEmpty()) {
             throw NoSuchMethodException(
-                "interceptKeyBeforeDispatching(IBinder, KeyEvent, int) not found on PhoneWindowManager")
+                "interceptKeyBeforeQueueing(KeyEvent, int) not found on PhoneWindowManager")
         }
         methods.createHooks {
             before { param ->
-                val event = param.args.getOrNull(1) as? KeyEvent ?: return@before
+                val event = param.args.getOrNull(0) as? KeyEvent ?: return@before
                 if (event.action != KeyEvent.ACTION_DOWN && event.action != KeyEvent.ACTION_UP) {
                     return@before
                 }
@@ -87,8 +96,9 @@ object RelayStylusKeysToDrawAnywhere : BaseHook() {
                 if (!deviceName.contains("himax", ignoreCase = true)) return@before
 
                 if (isInterceptActive()) {
-                    // Negative delay tells InputDispatcher to skip the event entirely.
-                    param.result = -1L
+                    // Returning 0 clears ACTION_PASS_TO_USER: InputDispatcher
+                    // drops the event before queuing it.
+                    param.result = 0
                     if (event.repeatCount == 0) relayKey(event)
                 }
             }
