@@ -14,6 +14,8 @@
     <string name="fix_disable_multi_finger_gesture_filter_tips">同时受“桌面-屏蔽三指、四指手势”和“游戏防打扰-关闭三指截图”控制</string>
     <string name="ignore_stylus_key_gesture">忽略触控笔按键手势</string>
     <string name="ignore_stylus_key_gesture_tips">忽略触控笔按键的长按手势</string>
+    <string name="relay_stylus_keys_to_drawanywhere">转发触控笔按键到 DrawAnywhere</string>
+    <string name="relay_stylus_keys_to_drawanywhere_tips">DrawAnywhere 画布可见时，笔侧键由其接管（按住=橡皮，轻点=切换工具）；画布隐藏时按键照常透传。需要 DrawAnywhere 2.3-h7.2 及以上</string>
     <string name="input">输入</string>
     <string name="no_magic_pointer">关闭Magic Pointer</string>
     <string name="no_magic_pointer_tips">关掉MIUI for Pad的圆形鼠标，恢复为安卓原生鼠标指针</string>

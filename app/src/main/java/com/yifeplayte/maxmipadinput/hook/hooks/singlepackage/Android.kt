@@ -4,6 +4,7 @@ import com.yifeplayte.maxmipadinput.hook.hooks.BasePackage
 import com.yifeplayte.maxmipadinput.hook.hooks.singlepackage.android.DisableFixedOrientation
 import com.yifeplayte.maxmipadinput.hook.hooks.singlepackage.android.IgnoreStylusKeyGesture
 import com.yifeplayte.maxmipadinput.hook.hooks.singlepackage.android.NoMagicPointer
+import com.yifeplayte.maxmipadinput.hook.hooks.singlepackage.android.RelayStylusKeysToDrawAnywhere
 import com.yifeplayte.maxmipadinput.hook.hooks.singlepackage.android.RemoveStylusBluetoothRestriction
 import com.yifeplayte.maxmipadinput.hook.hooks.singlepackage.android.RestoreEsc
 
@@ -13,6 +14,7 @@ object Android : BasePackage() {
         DisableFixedOrientation,
         IgnoreStylusKeyGesture,
         NoMagicPointer,
+        RelayStylusKeysToDrawAnywhere,
         RemoveStylusBluetoothRestriction,
         RestoreEsc,
     )

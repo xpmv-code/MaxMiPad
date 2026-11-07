@@ -29,6 +29,15 @@ object EnableStylusInputMethod : BaseMultiHook() {
             .filterByName("isStylusDeviceConnected").single().createHook {
                 returnConstant(true)
             }
+        loadClass("android.view.InputDevice").methodFinder()
+            .filterByName("isXiaomiStylus").toList().createHooks {
+                before {
+                    val device = it.thisObject as? android.view.InputDevice ?: return@before
+                    if (device.name == "himax-stylus") {
+                        it.result = 2
+                    }
+                }
+            }
     }
 
     private fun hookForHandWriting() {

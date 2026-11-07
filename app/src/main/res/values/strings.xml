@@ -15,6 +15,8 @@
     <string name="fix_disable_multi_finger_gesture_filter_tips">Controlled by both \"Home - Don\'t respond to three- and four-finger gestures\" and \"Game DND - Restrict screenshot gestures\"</string>
     <string name="ignore_stylus_key_gesture">Ignore stylus buttons gesture</string>
     <string name="ignore_stylus_key_gesture_tips">Ignore the long press gesture on the stylus buttons</string>
+    <string name="relay_stylus_keys_to_drawanywhere">Relay stylus keys to DrawAnywhere</string>
+    <string name="relay_stylus_keys_to_drawanywhere_tips">When the DrawAnywhere canvas is visible, stylus side buttons control it (hold = eraser, tap = switch tool); hidden canvas passes keys through. Requires DrawAnywhere 2.3-h7.2+</string>
     <string name="input">Input</string>
     <string name="no_magic_pointer">No Magic Pointer</string>
     <string name="no_magic_pointer_tips">Turn the round MIUI pointer to AOSP pointer</string>

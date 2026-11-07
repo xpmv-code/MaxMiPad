@@ -101,6 +101,13 @@ class MainPage : BasePage() {
         )
         TextSummaryWithSwitch(
             TextSummaryV(
+                textId = R.string.relay_stylus_keys_to_drawanywhere,
+                tipsId = R.string.relay_stylus_keys_to_drawanywhere_tips
+            ),
+            SwitchV("relay_stylus_keys_to_drawanywhere", false)
+        )
+        TextSummaryWithSwitch(
+            TextSummaryV(
                 textId = R.string.set_gesture_need_finger_num_to_4,
                 tipsId = R.string.set_gesture_need_finger_num_to_4_tips
             ),
