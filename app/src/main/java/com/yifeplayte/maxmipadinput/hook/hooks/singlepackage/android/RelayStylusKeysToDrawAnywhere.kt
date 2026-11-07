@@ -46,21 +46,32 @@ object RelayStylusKeysToDrawAnywhere : BaseHook() {
 
     private val systemContext: Context? by lazy {
         runCatching {
-            val activityThread = Class.forName("android.app.ActivityThread")
-                .getMethod("systemMain").invoke(null)
-            activityThread.javaClass.getMethod("getSystemContext")
-                .invoke(activityThread) as Context
+            // ActivityThread.systemMain() would create a NEW ActivityThread
+            // instance every call and blows up inside system_server — use the
+            // running singleton instead.
+            val atClass = Class.forName("android.app.ActivityThread")
+            val at = atClass.getMethod("currentActivityThread").invoke(null)
+                ?: return@runCatching null
+            atClass.getMethod("getSystemContext").invoke(at) as Context
         }.getOrNull()
     }
 
     private fun isInterceptActive(): Boolean {
         val now = SystemClock.uptimeMillis()
         if (now - cachedAtMs < CACHE_TTL_MS) return cachedActive
-        val active = runCatching {
-            systemContext?.contentResolver
-                ?.call(Uri.parse(AUTHORITY), "intercept_active", null, null)
-                ?.getBoolean("active", false) ?: false
-        }.getOrDefault(false)
+        val ctx = systemContext
+        val active = if (ctx == null) {
+            Log.d(TAG, "isInterceptActive: systemContext unavailable")
+            false
+        } else {
+            runCatching {
+                ctx.contentResolver
+                    .call(Uri.parse(AUTHORITY), "intercept_active", null, null)
+                    ?.getBoolean("active", false) ?: false
+            }.onFailure {
+                Log.d(TAG, "isInterceptActive: provider call failed: $it")
+            }.getOrDefault(false)
+        }
         cachedActive = active
         cachedAtMs = now
         return active

@@ -16,8 +16,8 @@ android {
         applicationId = "com.yifeplayte.maxmipadinput"
         minSdk = 30
         targetSdk = 34
-        versionCode = 26
-        versionName = "1.6.2-h7.4"
+        versionCode = 27
+        versionName = "1.6.2-h7.5"
 
         applicationVariants.configureEach {
             outputs.configureEach {
