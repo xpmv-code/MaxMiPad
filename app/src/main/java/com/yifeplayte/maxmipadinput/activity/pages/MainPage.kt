@@ -111,7 +111,7 @@ class MainPage : BasePage() {
                 textId = R.string.fenbi_scratch_stylus_keys,
                 tipsId = R.string.fenbi_scratch_stylus_keys_tips
             ),
-            SwitchV("fenbi_scratch_stylus_keys", false)
+            SwitchV("fenbi_scratch_tap_relay", false)
         )
         TextSummaryWithSwitch(
             TextSummaryV(
