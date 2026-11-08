@@ -41,6 +41,11 @@ object RelayStylusKeysToDrawAnywhere : BaseHook() {
     private val stylusKeyCodes =
         setOf(KeyEvent.KEYCODE_PAGE_UP, KeyEvent.KEYCODE_PAGE_DOWN)
 
+    /** ADR-0002 §9.1: keycodes whose arrival metadata is logged verbatim. */
+    private val EVIDENCE_KEYCODES =
+        setOf(KeyEvent.KEYCODE_PAGE_UP, KeyEvent.KEYCODE_PAGE_DOWN,
+            KeyEvent.KEYCODE_STYLUS_BUTTON_PRIMARY, KeyEvent.KEYCODE_STYLUS_BUTTON_SECONDARY)
+
     private var cachedActive = false
     private var cachedAtMs = 0L
 
@@ -108,6 +113,16 @@ object RelayStylusKeysToDrawAnywhere : BaseHook() {
             methods.createHooks {
                 before { param ->
                     val event = param.args.getOrNull(0) as? KeyEvent ?: return@before
+                    // ADR-0002 §9.1 keyIn evidence: record exactly what the
+                    // physical pen delivers here (keycode/scanCode/source/
+                    // device) before any filtering — decides the Router's
+                    // keycode contract (92/93 vs 308/309). No behavior change.
+                    if (event.keyCode in EVIDENCE_KEYCODES && event.repeatCount == 0) {
+                        Log.d(TAG, "keyIn keyCode=${event.keyCode} scanCode=${event.scanCode} " +
+                            "source=0x${Integer.toHexString(event.source)} " +
+                            "device=${event.device?.name} deviceId=${event.deviceId} " +
+                            "action=${event.action} flags=0x${Integer.toHexString(event.flags)}")
+                    }
                     if (event.action != KeyEvent.ACTION_DOWN && event.action != KeyEvent.ACTION_UP) {
                         return@before
                     }
