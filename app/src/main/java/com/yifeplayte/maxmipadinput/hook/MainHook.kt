@@ -5,6 +5,7 @@ import com.yifeplayte.maxmipadinput.hook.hooks.multiple.EnableStylusInputMethod
 import com.yifeplayte.maxmipadinput.hook.hooks.multiple.SetGestureNeedFingerNumTo4
 import com.yifeplayte.maxmipadinput.hook.hooks.multiple.VerticalSplitOnPortrait
 import com.yifeplayte.maxmipadinput.hook.hooks.singlepackage.Android
+import com.yifeplayte.maxmipadinput.hook.hooks.singlepackage.Fenbi
 import com.yifeplayte.maxmipadinput.hook.hooks.singlepackage.Home
 import com.yifeplayte.maxmipadinput.hook.utils.DexKit
 import de.robv.android.xposed.IXposedHookLoadPackage
@@ -14,6 +15,7 @@ import de.robv.android.xposed.callbacks.XC_LoadPackage
 private const val TAG = "MaxMiPad"
 private val singlePackagesHooked = setOf(
     Android,
+    Fenbi,
     Home,
 )
 private val multiPackagesHooked = setOf(

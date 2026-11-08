@@ -108,6 +108,13 @@ class MainPage : BasePage() {
         )
         TextSummaryWithSwitch(
             TextSummaryV(
+                textId = R.string.fenbi_scratch_stylus_keys,
+                tipsId = R.string.fenbi_scratch_stylus_keys_tips
+            ),
+            SwitchV("fenbi_scratch_stylus_keys", false)
+        )
+        TextSummaryWithSwitch(
+            TextSummaryV(
                 textId = R.string.set_gesture_need_finger_num_to_4,
                 tipsId = R.string.set_gesture_need_finger_num_to_4_tips
             ),
